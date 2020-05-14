@@ -34,7 +34,7 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.name "Hello World Action"
         git add dummy.txt
         git commit -m "$(date)" -a
         
