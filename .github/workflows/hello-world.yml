@@ -33,13 +33,13 @@ jobs:
 
     - name: Update DNS data
       run: |
-        python get_dns.py -s dns-data.sqlite -d dns-data.txt
+        python get_dns.py -d dns-data.txt
                 
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Hello World Action"
-        git add dummy.txt dns-data.sqlite dns-data.txt
+        git add dummy.txt dns-data.txt
         git commit -m "$(date)" -a
         
     - name: Push changes
