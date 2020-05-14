@@ -34,7 +34,8 @@ jobs:
     - name: Update DNS data
       run: |
          mkdir -p results
-         python3 hnrd.py -n -f results/newly-registered-domains-2020-05-11.txt -s bananas
+         pip install -r hnrd-requirements-python2.txt
+         python hnrd.py -n -f results/newly-registered-domains-2020-05-11.txt -s bananas
            
     - name: Commit files
       run: |
