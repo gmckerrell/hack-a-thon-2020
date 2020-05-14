@@ -41,7 +41,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Hello World Action"
-        git add dummy.txt results
+        git add -r dummy.txt results
         git commit -m "$(date)" -a
         
     - name: Push changes
