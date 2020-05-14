@@ -15,30 +15,38 @@
 # 5. write to db
 
 import sys, getopt
-
-if len(sys.argv) == 3:
-    sqlite_path = str(sys.argv[1])
-    downloaded_path = str(sys.argv[2])
+from datetime import datetime, timedelta
+import hnrd
 
 def main(argv):
-    sqlite_path = ''
-    downloaded_path = ''
+    dowloaded_file_path = ''
     try:
-        opts, args = getopt.getopt(argv,"hs:d:")
+        opts, args = getopt.getopt(argv,"hd:")
     except getopt.GetoptError:
-        print 'get_dns.py -s <sqlite_path> -d <dowloaded_file_path>'
+        print ('get_dns.py -d <dowloaded_file_path>')
         sys.exit(2)
     for opt, arg in opts:
-        print arg
         if opt == '-h':
-            print 'get_dns.py -s <sqlite_path> -d <dowloaded_file_path>'
+            print ('get_dns.py -d <dowloaded_file_path>')
             sys.exit()
         elif opt == ("-d"):
-            downloaded_path = arg
-        elif opt == ("-s"):
-            sqlite_path = arg
-    print 'sqlite path is ', sqlite_path
-    print 'downloaded file path is ', downloaded_path
+            dowloaded_file_path = arg
+
+    print ('downloaded file path is ', dowloaded_file_path)
+
+    download(dowloaded_file_path)
+
+    print ("DOWNLOADED")
+
+def download(dowloaded_file_path):
+    yesterday = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
+    
+    try:
+        hnrd.donwnload_nrd(yesterday)
+    except:
+        print("Not a correct input (example: 2010-10-10)")
+        sys.exit()
+
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+    main(sys.argv[1:])
