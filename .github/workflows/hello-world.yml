@@ -31,16 +31,16 @@ jobs:
         find $GITHUB_WORKSPACE -ls
         echo "$(date): hello world" >> dummy.txt
 
-    #- name: Update DNS data
-   #   run: |
-    #    pip3 install dnspython whois colorama termcolor bs4 python-Levenshtein tldextract
-   #     python3 hnrd.py -f 2020-05-10 -s paypal > paypal.txt
-                
+    - name: Update DNS data
+      run: |
+         mkdir -p results
+         python hnrd.py -n -f results/newly-registered-domains-2020-05-11.txt -s bananas
+           
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Hello World Action"
-        git add dummy.txt
+        git add dummy.txt results
         git commit -m "$(date)" -a
         
     - name: Push changes
