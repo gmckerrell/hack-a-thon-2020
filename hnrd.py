@@ -444,7 +444,7 @@ def donwnload_nrd(d):
 					print("File is not a zip file.")
 					sys.exit()
 		except:
-			print("File {}.zip does not exist on the remore server.".format(d))
+			print("File {}.zip does not exist on the remote server.".format(d))
 			sys.exit()
 
 def bitsquatting(search_word):
@@ -478,29 +478,39 @@ if __name__ == '__main__':
 	IPs=[]
 	NAMES=[]
 	parser = argparse.ArgumentParser(prog="hnrd.py",description='hunting newly registered domains')
+	parser.add_argument("-n", action="store_true", dest='nodownload', help="skip download just use date arg as existing file")
 	parser.add_argument("-f", action="store", dest='date', help="date [format: year-month-date]",required=True)
 	parser.add_argument("-s", action="store", dest='search',help="search a keyword",required=True)
 	parser.add_argument("-v", action="version",version="%(prog)s v1.0")
 	args = parser.parse_args()
 
-	regexd=re.compile('[\d]{4}-[\d]{2}-[\d]{2}$')
-	matchObj=re.match(regexd,args.date)
-	if matchObj:
-		donwnload_nrd(args.date)
-	else:
-		print("Not a correct input (example: 2010-10-10)")
-		sys.exit()
+	if (args.nodownload != True):
+		regexd=re.compile('[\d]{4}-[\d]{2}-[\d]{2}$')
+		matchObj=re.match(regexd,args.date)
+		if matchObj:
+			donwnload_nrd(args.date)
+		else:
+			print("Not a correct input (example: 2010-10-10)")
+			sys.exit()
 
 	try:
 		f = open(args.date + '.txt','r')
+                print("Opened {}.txt".format(args.date))
 	except:
-		print("No such file or directory {}.zip found. Trying domain-names.txt.".format(args.date))
+		print("No such file or directory {}.txt found. Trying {}.".format(args.date,args.date))
 
 		try:
-			f = open('domain-names.txt','r')
+			f = open(args.date,'r')
+                	print("Opened {}".format(args.date))
 		except:
-			print("No such file or directory domain-names.txt found")
-			sys.exit()
+			print("No such file or directory {} found. Trying domain-names.txt.".format(args.date))
+	
+			try:
+				f = open('domain-names.txt','r')
+                		print("Opened domain-names.txt")
+			except:
+				print("No such file or directory domain-names.txt found")
+				sys.exit()
 
 	bitsquatting_search=bitsquatting(args.search)
 	hyphenation_search=hyphenation(args.search)
