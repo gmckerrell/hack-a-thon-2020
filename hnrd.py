@@ -19,6 +19,7 @@ import json
 import Levenshtein
 import tldextract
 import base64
+import datetime
 
 
 try:
@@ -80,22 +81,25 @@ def DNS_Records(domain):
 
 def get_DNS_record_results():
 	global IPs
+        global ALLRESULTS
 	try:
 		with concurrent.futures.ThreadPoolExecutor(max_workers=len(DOMAINS)) as executor:
 			future_to_domain={executor.submit(DNS_Records, domain):domain for domain in DOMAINS}
 			for future in concurrent.futures.as_completed(future_to_domain):
 				dom=future_to_domain[future]
-				print("  \_", colored(dom,'cyan'))
+                                ALLRESULTS[dom]["SOA"]=""
 				try:
 					DNSAdata = future.result()
 					for k,v in DNSAdata.items():
-						print("    \_", k,colored(','.join(v), 'yellow'))
+                                                if k == "SOA":
+                                                	ALLRESULTS[dom]["SOA"] = v[0]
 						for ip in v:
-							aa=re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",ip)
-							if aa:
-								IPs.append(ip)
+                                                        aa=re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",ip)
+                                                        if aa:
+                                                            ALLRESULTS[dom]["IP"]=ip
+                                                            IPs.append(ip)
 				except Exception as exc:
-					print(('%r generated an exception: %s' % (dom, exc)))
+					print(('%r generated an exception: %s' % (dom, exc)),file=sys.stderr)
 	except ValueError:
 		pass
 	return IPs
@@ -147,7 +151,7 @@ def whois_domain(domain_name):
 	except TypeError:
 		pass
 	except whois.parser.PywhoisError:
-		print(colored("No match for domain: {}.".format(domain_name),'red'))
+		print(colored("No match for domain: {}.".format(domain_name),'red'),file=sys.stderr)
 	except AttributeError:
 		pass
 	return RES
@@ -162,74 +166,48 @@ def IP2CIDR(ip):
 	return results
 
 def get_IP2CIDR():
+	global ALLRESULTS
+        global IP2DOMAIN
+        global IPs
+        ipresults={}
 	try:
 		with concurrent.futures.ThreadPoolExecutor(max_workers=len(IPs)) as executor:
 			future_to_ip2asn={executor.submit(IP2CIDR, ip):ip for ip in IPs}
 			for future in concurrent.futures.as_completed(future_to_ip2asn):
 				ipaddress=future_to_ip2asn[future]
-				print("  \_",colored(ipaddress, 'cyan'))
 				try:
 					data = future.result()
 					for k,v in data.items():
-						print("    \_", k, colored(v, 'yellow'))
+                                                if k == "asn_country_code":
+                                                	ipresults[ipaddress]=v
 				except Exception as exc:
-					print(('%r generated an exception: %s' % (ipaddress, exc)))
+					print(('%r generated an exception: %s' % (ipaddress, exc)),file=sys.stderr)
+
+        	for d in ALLRESULTS:
+                    if ("IP" in ALLRESULTS[d]) and (ALLRESULTS[d]["IP"] in ipresults):
+                        ALLRESULTS[d]["CountryCode"] = ipresults[ALLRESULTS[d]["IP"]]
+
 	except ValueError:
 		pass
 
 def get_WHOIS_results():
 	global NAMES
+        global ALLRESULTS
 	try:
 		with concurrent.futures.ThreadPoolExecutor(max_workers=len(DOMAINS)) as executor:
 			future_to_whois_domain={executor.submit(whois_domain, domain):domain for domain in DOMAINS}
 			for future in concurrent.futures.as_completed(future_to_whois_domain):
 				dwhois=future_to_whois_domain[future]
+                                ALLRESULTS[dwhois]["Created"]=today
 				try:
 					whois_data = future.result()
 					if whois_data:
 						for k,v in whois_data.items():
 							if 'creation_date' in k:
-								cd=whois_data.get('creation_date')
-							if 'updated_date' in k:
-								ud=whois_data.get('updated_date')
-							if 'expiration_date' in k:
-								ed=whois_data.get('expiration_date')
-							if 'creation_date_diff' in k:
-								cdd=whois_data.get('creation_date_diff')
-							if 'name' in k:
-								name=whois_data.get('name')
-							if 'emails' in k:
-								email=whois_data.get('emails')
-							if 'registrar' in k:
-								reg=whois_data.get('registrar')
-
-						if isinstance(email,list):
-							print("  \_", colored(dwhois,'cyan'), \
-							"\n    \_ Created Date", colored(cd, 'yellow'), \
-							"\n    \_ Updated Date", colored(ud, 'yellow'), \
-							"\n    \_ Expiration Date", colored(ed, 'yellow'), \
-							"\n    \_ DateDiff", colored(cdd, 'yellow'), \
-							"\n    \_ Name",colored(name, 'yellow'),\
-							"\n    \_ Email", colored(','.join(email), 'yellow'), \
-							"\n    \_ Registrar", colored(reg, 'yellow'))
-
-							if isinstance(name,list):
-								for n in name:
-									NAMES.append(n)
-							else:
-								NAMES.append(name)
-						else:
-								print("  \_ ", colored(dwhois,'cyan'), \
-								"\n    \_ Created Date", colored(cd, 'yellow'), \
-								"\n    \_ Updated Date", colored(ud, 'yellow'), \
-								"\n    \_ Expiration Date", colored(ed, 'yellow'), \
-								"\n    \_ DateDiff", colored(cdd, 'yellow'), \
-								"\n    \_ Name",colored(name, 'yellow'),\
-								"\n    \_ Email", colored(email, 'yellow'),	\
-								"\n    \_ Registrar", colored(reg, 'yellow'))
+                                                            ALLRESULTS[dwhois]["Created"]=whois_data.get('creation_date').strftime("%Y-%m-%d")
 
 				except Exception as exc:
-					print(('%r generated an exception: %s' % (dwhois, exc)))
+					print(('%r generated an exception: %s' % (dwhois, exc)),file=sys.stderr)
 	except ValueError:
 		pass
 	return NAMES
@@ -265,7 +243,7 @@ def get_EmailDomainBigData():
 					else:
 						print("    \_", colored(str(len(CreatedDomains)) + " domain(s) have been created in the past",'yellow'))
 				except Exception as exc:
-					print(('%r generated an exception: %s' % (namedomaininfo, exc)))
+					print(('%r generated an exception: %s' % (namedomaininfo, exc)),file=sys.stderr)
 	except ValueError:
 		pass
 
@@ -278,22 +256,19 @@ def crt(domain):
 	return data
 
 def getcrt():
+	global ALLRESULTS
 	try:
 		with concurrent.futures.ThreadPoolExecutor(max_workers=len(NAMES)) as executor:
 			future_to_crt={executor.submit(crt, domain):domain for domain in DOMAINS}
 			for future in concurrent.futures.as_completed(future_to_crt):
 				d=future_to_crt[future]
-				print("  \_", colored(d,'cyan'))
+                                ALLRESULTS[d]["Certificates"]=1
 				try:
 					crtdata=future.result()
 					if len(crtdata)>0:
-						for crtd in crtdata:
-							for k,v in crtd.items():
-								print("    \_",k,colored(v,'yellow'))
-					else:
-						print("    \_", colored("No CERT found",'red'))
+                                        	ALLRESULTS[d]["Certificates"]=0
 				except Exception as exc:
-					print("    \_",colored(exc,'red'))
+					pass
 	except ValueError:
 		pass
 
@@ -305,62 +280,36 @@ def VTDomainReport(domain):
 		return response_dict
 
 def getVTDomainReport():
+	global ALLRESULTS
 	try:
 		with concurrent.futures.ThreadPoolExecutor(max_workers=len(DOMAINS)) as executor:
 			future_to_vt={executor.submit(VTDomainReport, domain):domain for domain in DOMAINS}
 			for future in concurrent.futures.as_completed(future_to_vt):
 				d=future_to_vt[future]
-				print("  \_",colored(d,'cyan'))
 				try:
+                                        ALLRESULTS[d]["VirusTotal"]=0
 					vtdata = future.result()
 					if vtdata['response_code']==1:
 						if 'detected_urls' in vtdata:
 							if len(vtdata['detected_urls'])>0:
-								print("    \_",colored("Detected URLs",'red'))
-								for det_urls in vtdata['detected_urls']:
-									print("      \_", colored(det_urls['url'],'yellow'),\
-									colored(det_urls['positives'],'yellow'), \
-									"/", \
-									colored(det_urls['total'],'yellow'),\
-									colored(det_urls['scan_date'],'yellow'))
+								ALLRESULTS[d]["VirusTotal"]+=1
 						if 'detected_downloaded_samples' in vtdata:
 							if len(vtdata['detected_downloaded_samples'])>0:
-								print("    \_",colored("Detected Download Samples",'red'))
-								for det_donw_samples in vtdata['detected_downloaded_samples']:
-									print("      \_", colored(det_donw_samples['date'],'yellow'),\
-									colored(det_donw_samples['positives'],'yellow'), \
-									"/", \
-									colored(det_donw_samples['total'],'yellow'),\
-									colored(det_donw_samples['sha256'],'yellow'))
+								ALLRESULTS[d]["VirusTotal"]+=1
 						if 'detected_communicating_samples' in vtdata:
 							if len(vtdata['detected_communicating_samples'])>0:
-								print("    \_",colored("Detected Communication Samples",'red'))
-								for det_comm_samples in vtdata['detected_communicating_samples']:
-									print("      \_", colored(det_comm_samples['date'],'yellow'),\
-									colored(det_comm_samples['positives'],'yellow'), \
-									"/", \
-									colored(det_comm_samples['total'],'yellow'),\
-									colored(det_comm_samples['sha256'],'yellow'))
+								ALLRESULTS[d]["VirusTotal"]+=1
 						if 'categories' in vtdata:
 							if len(vtdata['categories'])>0:
-								print("    \_",colored("categories",'red'))
-								for ctg in vtdata['categories']:
-									print("      \_", colored(ctg,'yellow'))
+								ALLRESULTS[d]["VirusTotal"]+=1
 						if 'subdomains' in vtdata:
 							if len(vtdata['subdomains'])>0:
-								print("    \_",colored("Subdomains",'red'))
-								for vt_domain in vtdata['subdomains']:
-									print("      \_", colored(vt_domain,'yellow'))
+								ALLRESULTS[d]["VirusTotal"]+=1
 						if 'resolutions' in vtdata:
 							if len(vtdata['resolutions'])>0:
-								print("    \_",colored("Resolutions (PDNS)",'red'))
-								for vt_resolution in vtdata['resolutions']:
-									print("      \_", colored(vt_resolution['last_resolved'],'yellow'),\
-									colored(vt_resolution['ip_address'],'yellow'))
-					else:
-						print("    \_", colored(vtdata['verbose_msg'],'yellow'))
+								ALLRESULTS[d]["VirusTotal"]+=1
 				except Exception as exc:
-					print("    \_", colored(exc,'red'))
+                                	ALLRESULTS[d]["VirusTotal"]+=1
 	except ValueError:
 		pass
 
@@ -386,20 +335,21 @@ def quad9(domain):
 		pass
 
 def get_quad9_results():
+	global ALLRESULTS
 	try:
 		with concurrent.futures.ThreadPoolExecutor(max_workers=len(DOMAINS)) as executor:
 			future_to_quad9={executor.submit(quad9, domain):domain for domain in DOMAINS}
 			for future in concurrent.futures.as_completed(future_to_quad9):
 				quad9_domain=future_to_quad9[future]
-				print("  \_", colored(quad9_domain,'cyan'))
+                                ALLRESULTS[quad9_domain]["quad9"]=0
 				try:
 					QUAD9NXDOMAIN = future.result()
 					if QUAD9NXDOMAIN is not None:
-						print("    \_", colored(QUAD9NXDOMAIN,'red'))
+                                                ALLRESULTS[quad9_domain]["quad9"]=1
 					else:
-						print("    \_", colored("Not Blocked",'yellow'))
+                                                ALLRESULTS[quad9_domain]["quad9"]=1
 				except Exception as exc:
-					print(('%r generated an exception: %s' % (quad9_domain, exc)))
+					print(('%r generated an exception: %s' % (quad9_domain, exc)),file=sys.stderr)
 	except ValueError:
 		pass
 
@@ -440,6 +390,7 @@ def donwnload_nrd(d):
 				try:
 					zip = zipfile.ZipFile(d+".zip")
 					zip.extractall()
+                                        os.rename("domain-names.txt",d+".txt")
 				except:
 					print("File is not a zip file.")
 					sys.exit()
@@ -476,6 +427,8 @@ def subdomain(search_word):
 if __name__ == '__main__':
 	DOMAINS=[]
 	IPs=[]
+        ALLRESULTS={}
+        IP2DOMAIN={}
 	NAMES=[]
 	parser = argparse.ArgumentParser(prog="hnrd.py",description='hunting newly registered domains')
 	parser.add_argument("-n", action="store_true", dest='nodownload', help="skip download just use date arg as existing file")
@@ -495,22 +448,27 @@ if __name__ == '__main__':
 
 	try:
 		f = open(args.date + '.txt','r')
-                print("Opened {}.txt".format(args.date))
+                args.date+=".txt"
 	except:
-		print("No such file or directory {}.txt found. Trying {}.".format(args.date,args.date))
 
 		try:
 			f = open(args.date,'r')
-                	print("Opened {}".format(args.date))
 		except:
-			print("No such file or directory {} found. Trying domain-names.txt.".format(args.date))
-	
-			try:
-				f = open('domain-names.txt','r')
-                		print("Opened domain-names.txt")
-			except:
-				print("No such file or directory domain-names.txt found")
-				sys.exit()
+                        print("No such file or directory domain-names.txt found")
+                        sys.exit()
+
+	# work out the date in the filename
+        # then subtract 1 day
+        # failing that, assume today
+        regexd=re.compile('.*([\d]{4})-([\d]{2})-([\d]{2})\.txt$')
+        matchObj=re.match(regexd,args.date)
+        if matchObj:
+            filedate=datetime.datetime(int(matchObj.group(1)),int(matchObj.group(2)),int(matchObj.group(3)),0,0)
+        else:
+            filedate=datetime.now()
+        # the file date is actually a day after the registration
+        filedate = filedate - datetime.timedelta(1)
+        today=filedate.strftime('%Y-%m-%d')
 
 	bitsquatting_search=bitsquatting(args.search)
 	hyphenation_search=hyphenation(args.search)
@@ -518,54 +476,56 @@ if __name__ == '__main__':
 	search_all=bitsquatting_search+hyphenation_search+subdomain_search
 	search_all.append(args.search)
 
+        d2={}
 	for row in f:
 		for argssearch in search_all:
 			match = re.search(r"^"+argssearch,row)
 			if match:
-				DOMAINS.append(row.strip('\r\n'))
+                                d=row.strip('\r\n')
+				d2[d]=d
+
+        for domain in d2.keys():
+            DOMAINS.append(domain)
+
+        for domain in DOMAINS:
+            ALLRESULTS[domain]={}
+            ALLRESULTS[domain]["CountryCode"]="?"
 
 	start = time.time()
 
-	print("[*]-Retrieving DNS Record(s) Information")
+	print("[*]-Retrieving DNS Record(s) Information",file=sys.stderr)
 	get_DNS_record_results()
 
-	print("[*]-Retrieving IP2ASN Information")
+	print("[*]-Retrieving IP2ASN Information",file=sys.stderr)
 	get_IP2CIDR()
 
-	print("[*]-Retrieving WHOIS Information")
+	print("[*]-Retrieving WHOIS Information",file=sys.stderr)
 	get_WHOIS_results()
 
-	print("[*]-Retrieving Reverse WHOIS (by Name) Information [Source https://domainbigdata.com]")
-	get_EmailDomainBigData()
+	#print("[*]-Retrieving Reverse WHOIS (by Name) Information [Source https://domainbigdata.com]",file=sys.stderr)
+	#get_EmailDomainBigData()
 
-	print("[*]-Retrieving Certficates [Source https://crt.sh]")
+	print("[*]-Retrieving Certficates [Source https://crt.sh]",file=sys.stderr)
 	getcrt()
 
-	print("[*]-Retrieving VirusTotal Information")
+	print("[*]-Retrieving VirusTotal Information",file=sys.stderr)
 	getVTDomainReport()
 
-	print("[*]-Check domains against QUAD9 service")
+	print("[*]-Check domains against QUAD9 service",file=sys.stderr)
 	get_quad9_results()
 
-	print("[*]-Calculate Shannon Entropy Information")
+	print("[*]-Calculate Shannon Entropy Information",file=sys.stderr)
 	for domain in DOMAINS:
-		if shannon_entropy(domain) > 4:
-			print("  \_", colored(domain,'cyan'), colored(shannon_entropy(domain), 'red'))
-		elif shannon_entropy(domain) > 3.5 and shannon_entropy(domain) < 4:
-			print("  \_", colored(domain,'cyan'), colored(shannon_entropy(domain), 'yellow'))
-		else:
-			print("  \_",colored(domain,'cyan'), shannon_entropy(domain))
+                ALLRESULTS[domain]["shannon"]=100*shannon_entropy(domain)
 
-	print("[*]-Calculate Levenshtein Ratio")
+	print("[*]-Calculate Levenshtein Ratio",file=sys.stderr)
 	for domain in DOMAINS:
 		ext_domain=tldextract.extract(domain)
 		LevWord1=ext_domain.domain
 		LevWord2=args.search
-		if Levenshtein.ratio(LevWord1, LevWord2) > 0.8:
-			print("  \_", colored(LevWord1, 'cyan'), "vs",colored(LevWord2,'cyan'), colored(Levenshtein.ratio(LevWord1, LevWord2),'red'))
-		if Levenshtein.ratio(LevWord1, LevWord2) < 0.8 and Levenshtein.ratio(LevWord1, LevWord2) > 0.4:
-			print("  \_", colored(LevWord1, 'cyan'), "vs",colored(LevWord2,'cyan'), colored(Levenshtein.ratio(LevWord1, LevWord2),'yellow'))
-		if Levenshtein.ratio(LevWord1, LevWord2) < 0.4:
-			print("  \_", colored(LevWord1, 'cyan'), "vs", colored(LevWord2,'cyan'), colored(Levenshtein.ratio(LevWord1, LevWord2),'green'))
+                ALLRESULTS[domain]["levenshtein"]=100*Levenshtein.ratio(LevWord1, LevWord2)
 
-	print((time.time() - start))
+        #print("#domain,created,country,soa,vt,quad9,shannon,lev")
+        for d in DOMAINS:
+            print("%s,%s,%s,%s,%d,%d,%d,%d"%(d,ALLRESULTS[d]["Created"],ALLRESULTS[d]["CountryCode"],ALLRESULTS[d]["SOA"],ALLRESULTS[d]["VirusTotal"],ALLRESULTS[d]["quad9"],ALLRESULTS[d]["shannon"],ALLRESULTS[d]["levenshtein"]))
+
