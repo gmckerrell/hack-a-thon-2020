@@ -30,12 +30,16 @@ jobs:
       run: |
         find $GITHUB_WORKSPACE -ls
         echo "$(date): hello world" >> dummy.txt
-        
+
+    - name: Update DNS data
+      run: |
+        python get_dns.py -s dns-data.sqlite -d dns-data.txt
+                
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Hello World Action"
-        git add dummy.txt
+        git add dummy.txt dns-data.sqlite dns-data.txt
         git commit -m "$(date)" -a
         
     - name: Push changes
