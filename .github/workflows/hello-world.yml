@@ -33,13 +33,14 @@ jobs:
 
     - name: Update DNS data
       run: |
-        python get_dns.py -d dns-data.txt
+        pip3 install dnspython whois colorama termcolor bs4 python-Levenshtein tldextract
+        python3 hnrd.py -f 2020-05-10 -s paypal > paypal.txt
                 
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Hello World Action"
-        git add dummy.txt dns-data.txt
+        git add dummy.txt paypal.txt
         git commit -m "$(date)" -a
         
     - name: Push changes
