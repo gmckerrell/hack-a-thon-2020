@@ -40,7 +40,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Hello World Action"
-        git add dummy.txt paypal.txt
+        git add dummy.txt
         git commit -m "$(date)" -a
         
     - name: Push changes
