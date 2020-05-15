@@ -14,7 +14,7 @@ indir="$3"
 
 searchhash=$(base64 -w 0 <<<"$search")
 
-results=$outdir/$searchhash
+results=$indir/$searchhash
 [[ -e $results ]] || { echo "No results available!" >&2 ; exit 1 ; }
 mydir=$(dirname $(readlink -f $0))
 
