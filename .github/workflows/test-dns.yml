@@ -17,6 +17,7 @@ jobs:
     
       - name: Commit files
         run: |
+          find -ls
           git config --local user.email "action@github.com"
           git config --local user.name "DNS search test"
           git add results/*
