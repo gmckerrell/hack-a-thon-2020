@@ -5,7 +5,7 @@ inputs:
   commands:
     description: 'what to do'
     required: true
-    default: 'false'
+    default: 'set'
 runs:
   using: 'docker'
   image: 'Dockerfile'
