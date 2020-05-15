@@ -1,0 +1,14 @@
+# action.yml
+name: 'DNS Analysis'
+description: 'Run DNS analysis scripts'
+inputs:
+  commands:
+    description: 'what to do'
+    required: true
+    default: 'false'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  # TODO not going anywhere?
+  args:
+    - ${{ inputs.commands }}

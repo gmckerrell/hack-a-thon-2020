@@ -21,7 +21,12 @@ jobs:
       - name: Download new DNS data
         uses: ./ # Uses an action in the root directory
         id: download
-        uses: actions/download
+        with:
+            commands:
+              - python
+              - /app/get_dns.py
+              - -d
+              - /historic
     
       - name: Commit files
         run: |
