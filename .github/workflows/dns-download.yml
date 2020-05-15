@@ -23,10 +23,8 @@ jobs:
         id: download
         with:
             commands:
-              - python
-              - /app/get_dns.py
-              - -d
-              - /historic
+              - -c
+              - python /app/get_dns.py -d /historic
     
       - name: Commit files
         run: |
