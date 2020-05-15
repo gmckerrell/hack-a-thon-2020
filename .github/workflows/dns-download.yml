@@ -21,6 +21,7 @@ jobs:
       - name: Download new DNS data
         uses: ./ # Uses an action in the root directory
         id: download
+        uses: actions/download
     
       - name: Commit files
         run: |
