@@ -1,4 +1,5 @@
 # action.yml
+# TODO support date arg
 name: 'New DNS Download'
 description: 'Download new DNS names'
 inputs:
@@ -7,8 +8,8 @@ inputs:
     required: false
 runs:
   using: 'docker'
-  image: 'Dockerfile.download'
+  image: 'Dockerfile'
   args:
-    - ${{ inputs.date }}
-    - /results
+    - /app/get_dns.sh
+    - -d
     - /historic
