@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY fs /
 
-ENTRYPOINT ["/usr/bin/env"]
+ENTRYPOINT ["/bin/bash","-c"]
