@@ -14,3 +14,15 @@ jobs:
         id: test
         with:
           keywords: 'banana apple'
+    
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "DNS search test"
+          git add results/*
+          git commit -m "$(date)" -a
+        
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
