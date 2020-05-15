@@ -21,9 +21,7 @@ jobs:
       - name: Download new DNS data
         uses: ./
         with:
-            commands:
-              - -c
-              - "python3 /app/get_dns.py -d /historic"
+            commands: -c "python3 /app/get_dns.py -d /historic"
     
       - name: Commit files
         run: |
