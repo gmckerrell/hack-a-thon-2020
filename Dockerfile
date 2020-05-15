@@ -8,4 +8,3 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY fs /
 
 ENTRYPOINT ["bash"]
-CMD [ "" ]
