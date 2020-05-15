@@ -31,12 +31,6 @@ jobs:
         find $GITHUB_WORKSPACE -ls
         echo "$(date): hello world" >> dummy.txt
 
-    - name: Update DNS data
-      run: |
-         mkdir -p results
-         pip3 install -r hnrd-requirements-python2.txt
-         python3 hnrd.py -n -f results/newly-registered-domains-2020-05-11.txt -s bananas
-           
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
