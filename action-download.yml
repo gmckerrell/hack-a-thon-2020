@@ -1,0 +1,14 @@
+# action.yml
+name: 'New DNS Download'
+description: 'Download new DNS names'
+inputs:
+  date:
+    description: 'which day to download'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile.download'
+  args:
+    - ${{ inputs.date }}
+    - /results
+    - /historic
