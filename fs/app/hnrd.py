@@ -474,8 +474,8 @@ if __name__ == '__main__':
     d2={}
     RE_list=[re.compile(search) for search in search_all]
     for r in f:
-        row = str(r,"utf-8").strip("\r\n") # convert bytes into string
-        print(row, file=sys.stderr)
+        row = str(r).encode("utf-8").strip("\r\n") # convert bytes into string
+        #print(row, file=sys.stderr)
         for RE in RE_list:
             match = RE.match(row)
             if match:
