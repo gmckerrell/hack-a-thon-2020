@@ -18,6 +18,7 @@ import sys, getopt
 from datetime import datetime, timedelta
 import base64
 import requests
+from __future__ import print_function
 
 def main(argv):
     downloaded_file_path = ''
