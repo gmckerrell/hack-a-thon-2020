@@ -3,7 +3,7 @@
 # p1=search string
 # p2=output directory
 # p3=input directory
-
+set -ex
 [[ -n $1 ]] || { echo "Search string not specified" >&2 ; exit 1 ; }
 [[ -n $2 ]] || { echo "Output directory not specified" >&2 ; exit 1 ; }
 [[ -n $3 ]] || { echo "Input directory not specified" >&2 ; exit 1 ; }
