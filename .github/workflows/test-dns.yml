@@ -22,7 +22,8 @@ jobs:
           git config --local user.name "DNS search test"
           git add results/*
           git commit -m "$(date)" -a
-        
+          git pull
+          
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
