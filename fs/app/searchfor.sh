@@ -15,7 +15,7 @@ indir="$3"
 searchhash=$(base64 -w 0 <<<"$search")
 
 results=$outdir/$searchhash
-if [[ -e $results ]] ; then
+if [[ -e $results.processed ]] ; then
     findargs="grep -v -F -f $results.processed"
 else
     findargs=cat
