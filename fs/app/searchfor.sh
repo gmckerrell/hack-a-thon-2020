@@ -24,7 +24,7 @@ fi
 mydir=$(dirname $(readlink -f $0))
 
 # find the new domain files which we have not seen before
-find $indir -type f | $findargs | while read f ; do
+find $indir -type f | $findargs | sort | while read f ; do
     # for each newer file, crawl the results
     python ${mydir}/hnrd.py -n -f "$f" -s "$search"
     echo "$f" >>$results.processed
