@@ -24,7 +24,7 @@ jobs:
           find -ls
           git config --local user.email "action@github.com"
           git config --local user.name "DNS data analyse"
-          git add search/*
+          git add results/*
           git diff-index --quiet HEAD -- || git commit -m "$(date)" -a
           git pull
           
