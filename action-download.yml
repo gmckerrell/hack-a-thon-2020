@@ -10,6 +10,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - /app/get_dns.sh
+    - /app/get_dns.py
     - -d
     - /historic
