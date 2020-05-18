@@ -18,4 +18,4 @@ jobs:
             args: "/app/plotgraph.sh covid graphs results"
     
       - name: Commit files
-        run: /bin/sh commit_and_push "Plot new DNS data" graphs
+        run: /bin/sh commit_and_push.sh "Plot new DNS data" graphs
