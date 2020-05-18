@@ -5,9 +5,9 @@ on:
     # trigger every day @midnight
     - cron:  '0 0 * * *'
   push:
-    branches: [ master ]
+    branches: [ master, gjm ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, gjm ]
 
 jobs:
   test_job:
@@ -21,7 +21,11 @@ jobs:
       - name: Download new DNS data
         uses: ./
         with:
-            commands: "python /app/get_dns.py -d /github/workspace/historic"
+            commands:
+            - python
+            - /app/get_dns.py
+            - -d
+            - historic
     
       - name: Commit files
         run: |
