@@ -26,14 +26,13 @@ jobs:
 
       - name: Commit files
         run: |
-          find -ls
+          find historic -ls
           git config --local user.email "action@github.com"
           git config --local user.name "DNS data download"
           git add historic/*
-          git diff-index --quiet HEAD -- || git commit -m "$(date)" -a
-          git pull
-          
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git diff-index --quiet HEAD -- || {
+              git commit -m "$(date)" -a
+              git pull
+              repo_uri="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+              git push
+          }
