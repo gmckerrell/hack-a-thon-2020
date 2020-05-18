@@ -9,7 +9,7 @@
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import csv, country_codes
-import sys
+import os, sys
 
 #date/number
 #1) count date
@@ -71,8 +71,11 @@ subplot_titles=("Number of New Domains Matching Key Word Over Time","Location of
 )
 
 csv_file=sys.argv[1]
+output_dir=sys.argv[2]
 data = import_csv(csv_file)
 plot_number_per_date(data, fig)
 plot_map(data, fig)
 
-fig.write_html("index.html")
+fig.write_html(
+    os.path.join(output_dir,"index.html")
+)
