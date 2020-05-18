@@ -56,6 +56,9 @@ def import_csv(csv_path):
 
 class Graph_node:
         def __init__(self, domain, registereddate, country, DNShost, vt, q9, shannon, levenshtein):
+            global n_homeless
+            if (country == '?'):
+                n_homeless+=1
             self.domain = domain
             self.registereddate = datetime.datetime.strptime(registereddate,'%Y-%m-%d').isoformat()
             self.country = country
@@ -67,16 +70,18 @@ class Graph_node:
     
 (csv_file, output_dir, search) = sys.argv[1:]
 
+n_homeless=0
+data = import_csv(csv_file)
+n_total=len(data)
 fig = make_subplots(
     rows=2, cols=1,
     specs=[[{"type": "xy"}], [{"type":"choropleth"}]],
     subplot_titles=(
         "Number of New Domains Matching '%s' Over Time"%search,
-        "Location of Domain Names Matching '%s' Word"%search,
+        "Location of Domain Names Matching '%s' Word<br>(no identified location for %d of %d)"%(search,n_homeless,n_total),
     ),
 )
 
-data = import_csv(csv_file)
 plot_number_per_date(data, fig)
 plot_map(data, fig)
 
