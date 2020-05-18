@@ -1,10 +1,7 @@
 name: Analyse new DNS data
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+    branches: [ master, gjm ]
 jobs:
   test_job:
     runs-on: ubuntu-latest
@@ -17,18 +14,8 @@ jobs:
       - name: Analyse new DNS data
         uses: ./
         with:
-            commands: "/app/searchfor.sh covid /github/workspace/results /github/workspace/historic"
+            args: "/app/searchfor.sh covid results historic"
     
       - name: Commit files
-        run: |
-          find -ls
-          git config --local user.email "action@github.com"
-          git config --local user.name "DNS data analyse"
-          git add results/*
-          git diff-index --quiet HEAD -- || git commit -m "$(date)" -a
-          git pull
+        run: /bin/sh commit_and_push.sh "Analyzed DNS data" results
           
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
