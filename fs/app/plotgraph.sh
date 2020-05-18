@@ -19,5 +19,4 @@ results=$indir/$searchhash
 mydir=$(dirname $(readlink -f $0))
 
 mkdir -p $outdir/$searchhash
-cd $outdir/$searchhash
-python3 $mydir/generate_graph.py $results  640 480
+python3 $mydir/generate_graph.py $results $outdir/$searchhash "$search"

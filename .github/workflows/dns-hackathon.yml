@@ -1,0 +1,41 @@
+name: Download, Process and Plot DNS data
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # trigger every day @midnight
+    - cron:  '0 0 * * *'
+  push:
+    branches: [ master, gjm ]
+    
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    name: Download new DNS data
+    steps:
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Download new DNS data
+        uses: ./
+        with:
+            args: python /app/get_dns.py -d historic
+
+      - name: Commit files
+        run: /bin/sh commit_and_push.sh "Commit DNS historic data" historic
+        
+      - name: Analyse new DNS data
+        uses: ./
+        with:
+            args: "/app/searchfor.sh covid results historic"
+    
+      - name: Commit files
+        run: /bin/sh commit_and_push.sh "Analyzed DNS data" results
+
+      - name: Plot new DNS data
+        uses: ./
+        with:
+            args: "/app/plotgraph.sh covid graphs results"
+    
+      - name: Commit files
+        run: /bin/sh commit_and_push.sh "Plot new DNS data" graphs

@@ -1,12 +1,13 @@
-FROM python:2
+FROM python:3
 WORKDIR /app
-RUN apt update
-RUN apt install -y whois
-COPY fs/app/requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN apt-get update && apt-get install -y \
+    whois \
+  && rm -rf /var/lib/apt/lists¬
+
+COPY fs/app/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY fs /
-COPY historic /
-COPY results /
 
-ENTRYPOINT ["/bin/bash","-c"]
+CMD []
+ENTRYPOINT ["/bin/bash","/entrypoint.sh"]

@@ -9,6 +9,7 @@
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import csv, country_codes
+import os, sys
 
 #date/number
 #1) count date
@@ -62,15 +63,21 @@ class Graph_node:
             self.shannon = shannon
             self.levenshtein = levenshtein
     
+(csv_file, output_dir, search) = sys.argv[1:]
 
 fig = make_subplots(
-rows=2, cols=1,
-specs=[[{"type": "xy"}], [{"type":"choropleth"}]],
-subplot_titles=("Number of New Domains Matching Key Word Over Time","Location of Domain Names Matching Key Word",),
+    rows=2, cols=1,
+    specs=[[{"type": "xy"}], [{"type":"choropleth"}]],
+    subplot_titles=(
+        "Number of New Domains Matching '%s' Over Time"%search,
+        "Location of Domain Names Matching '%s' Word"%search,
+    ),
 )
 
-data = import_csv("domain_names.csv")
+data = import_csv(csv_file)
 plot_number_per_date(data, fig)
 plot_map(data, fig)
 
-fig.write_html("index.html")
+fig.write_html(
+    os.path.join(output_dir,"index.html")
+)
