@@ -9,7 +9,8 @@
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import csv, country_codes
-import os, sys
+import os, sys, datetime
+from collections import OrderedDict
 
 #date/number
 #1) count date
@@ -18,11 +19,12 @@ def plot_number_per_date(data, fig):
     dates = {}
     for node in data:
         if node.registereddate not in dates.keys():
-            dates[str(node.registereddate)] = 1
+            dates[node.registereddate] = 1
         else: 
-            dates[str(node.registereddate)] += 1
+            dates[node.registereddate] += 1
     
-    fig.add_trace(go.Scatter(x=list(dates.keys()), y=list(dates.values()), mode='lines'))
+    dates2 = OrderedDict(sorted(dates.items()))
+    fig.add_trace(go.Scatter(x=list(dates2.keys()), y=list(dates2.values()), mode='lines'))
 
 def plot_map(data, fig):
     data_locations = {}
@@ -55,7 +57,7 @@ def import_csv(csv_path):
 class Graph_node:
         def __init__(self, domain, registereddate, country, DNShost, vt, q9, shannon, levenshtein):
             self.domain = domain
-            self.registereddate = registereddate
+            self.registereddate = datetime.datetime.strptime(registereddate,'%Y-%m-%d').isoformat()
             self.country = country
             self.DNShost = DNShost
             self.vt = vt
