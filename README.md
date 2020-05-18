@@ -10,4 +10,4 @@ This repository hosts some github actions which
 - details are cached in the github repostitory to maintain a historic record.
 
 ## Results
-[DNS Plot for "covid"](graphs/Y292aWQK/index.html)
+[DNS Plot for "covid"](https://gmckerrell.github.io/hack-a-thon-2020/graphs/Y292aWQK/index.html)
