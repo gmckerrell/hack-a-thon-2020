@@ -6,9 +6,10 @@ on:
     - cron:  '0 0 * * *'
   push:
     branches: [ master, gjm ]
+    
   pull_request:
     branches: [ master, gjm ]
-
+    
 jobs:
   test_job:
     runs-on: ubuntu-latest
