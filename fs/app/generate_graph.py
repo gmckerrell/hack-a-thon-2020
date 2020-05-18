@@ -63,14 +63,16 @@ class Graph_node:
             self.shannon = shannon
             self.levenshtein = levenshtein
     
+(csv_file, output_dir, search) = sys.argv[1:]
 
 fig = make_subplots(
-rows=2, cols=1,
-specs=[[{"type": "xy"}], [{"type":"choropleth"}]],
-subplot_titles=("Number of New Domains Matching Key Word Over Time","Location of Domain Names Matching Key Word",),
+    rows=2, cols=1,
+    specs=[[{"type": "xy"}], [{"type":"choropleth"}]],
+    subplot_titles=(
+        "Number of New Domains Matching '%s' Over Time"%search,
+        "Location of Domain Names Matching '%s' Word"%search,
+    ),
 )
-
-(csv_file, output_dir, width, height) = sys.argv[1:]
 
 data = import_csv(csv_file)
 plot_number_per_date(data, fig)
