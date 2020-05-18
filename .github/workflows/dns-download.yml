@@ -31,6 +31,6 @@ jobs:
           git add -v historic/*
           git commit -m "Commit DNS historic data" -a && {
               git pull
-              repo_uri="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+              git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
               git push
           }
