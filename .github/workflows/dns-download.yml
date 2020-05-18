@@ -25,10 +25,4 @@ jobs:
             args: python /app/get_dns.py -d historic
 
       - name: Commit files
-        run: |
-          git config --local user.name "$GITHUB_ACTOR"
-          git config --local user.email "$GITHUB_ACTOR@bots.github.com"
-          git add -v historic/*
-          git commit -m "Commit DNS historic data" -a || exit 0
-          git pull
-          git push
+        run: /bin/sh commit_and_push.sh "Commit DNS historic data" historic
