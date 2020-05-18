@@ -69,7 +69,8 @@ specs=[[{"type": "xy"}], [{"type":"choropleth"}]],
 subplot_titles=("Number of New Domains Matching Key Word Over Time","Location of Domain Names Matching Key Word",),
 )
 
-data = import_csv("domain_names.csv")
+cvs_file=sys.argv[1]
+data = import_csv(csv_file)
 plot_number_per_date(data, fig)
 plot_map(data, fig)
 
