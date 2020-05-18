@@ -2,13 +2,13 @@
 name: 'DNS Analysis'
 description: 'Run DNS analysis scripts'
 inputs:
-  commands:
+  args:
     description: 'what to do'
     required: true
-    default: 'set'
+    default: 'env'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   # TODO not going anywhere?
   args:
-    - ${{ inputs.commands }}
+    - ${{ inputs.args }}
