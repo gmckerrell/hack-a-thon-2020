@@ -29,8 +29,8 @@ jobs:
           find historic -ls
           git config --local user.email "action@github.com"
           git config --local user.name "DNS data download"
-          git add historic/*
-          git diff-index --quiet HEAD -- || {
+          git add -v historic/*
+          git diff-index HEAD -- || {
               git commit -m "$(date)" -a
               git pull
               repo_uri="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
