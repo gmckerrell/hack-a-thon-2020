@@ -1,7 +1,7 @@
 name: Plot new DNS data
 on:
   push:
-    branches: [ master ]
+    branches: [ master, gjm ]
 
 jobs:
   test_job:
