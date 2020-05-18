@@ -2,8 +2,6 @@ name: Plot new DNS data
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   test_job:
@@ -17,19 +15,7 @@ jobs:
       - name: Plot new DNS data
         uses: ./
         with:
-            commands: "/app/plotgraph.sh covid /github/workspace/graphs /github/workspace/results"
+            args: "/app/plotgraph.sh covid graphs results"
     
       - name: Commit files
-        run: |
-          find -ls
-          git config --local user.email "action@github.com"
-          git config --local user.name "DNS data analyse"
-          git add graphs/*
-          git diff-index --quiet HEAD -- || git commit -m "$(date)" -a
-          git pull
-          
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
+        run: /bin/sh commit_and_push "Plot new DNS data" graphs
