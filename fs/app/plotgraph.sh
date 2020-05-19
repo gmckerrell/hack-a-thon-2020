@@ -21,7 +21,7 @@ readme=$outdir/README.md
 while read; do
     searchhash=$(base64 -w 0 <<<"$REPLY")
 
-    results=$indir/$searchhash
+    results=$indir/${searchhash}.csv
     [[ -e $results ]] || { echo "No results available!" >&2 ; exit 1 ; }
 
     mkdir -p $outdir/$searchhash
