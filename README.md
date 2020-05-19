@@ -10,5 +10,5 @@ This repository hosts some github actions which
 - details are cached in the github repostitory to maintain a historic record.
 
 ## Results
-[Raw data on DNS registrations](https://gmckerrell.github.io/hack-a-thon-2020/results/README.md)
-[Graphs of DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/README.md)
+- [Raw data on DNS registrations](https://gmckerrell.github.io/hack-a-thon-2020/results/README.md)
+- [Graphs of DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/README.md)
