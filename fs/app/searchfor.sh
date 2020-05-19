@@ -17,14 +17,14 @@ mydir=$(dirname $(readlink -f $0))
 {
     echo "# Analysed DNS data" 
     echo "## Columns"
-    echo "`domain, created, country, soa, vt, quad9, shannon, lev`"
+    echo "\`domain, created, country, soa, vt, quad9, shannon, lev\`"
     echo "## CSV Files"
 } > $readme
 {
   while read; do
     searchhash=$(base64 -w 0 <<<"$REPLY")
 
-    results=$outdir/$searchhash
+    results=$outdir/${searchhash}.csv
     if [[ -e $results.processed ]] ; then
         findargs="grep -v -F -f $results.processed"
     else
@@ -37,6 +37,6 @@ mydir=$(dirname $(readlink -f $0))
         python ${mydir}/hnrd.py -n -f "$f" -s "$REPLY"
         echo "$f" >>$results.processed
     done >>$results
-    echo "- [\`$REPLY\`]($searchhash)" >> $readme
+    echo "- [\`$REPLY\`](${searchhash}.csv)" >> $readme
   done
 } < $searchfile
