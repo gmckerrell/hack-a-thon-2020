@@ -17,7 +17,7 @@ mydir=$(dirname $(readlink -f $0))
 {
     echo "# Analysed DNS data" 
     echo "## Columns"
-    echo "\`domain, created, country, soa, vt, quad9, shannon, lev\`"
+    echo "\`domain, registeredDate, country, DNShost, virusTotal, quad9, shannon, levenshtein\`"
     echo "## CSV Files"
 } > $readme
 {
