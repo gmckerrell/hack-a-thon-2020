@@ -526,7 +526,7 @@ if __name__ == '__main__':
         LevWord2=args.search
         ALLRESULTS[domain]["levenshtein"]=100*Levenshtein.ratio(LevWord1, LevWord2)
 
-    #print("#domain,created,country,soa,vt,quad9,shannon,lev")
+    print("Domain,Created,Country,SOA,Virus-Total,Quad9,Shannon-Entropy,Levenshtein-Ratio")
     for d in DOMAINS:
         print("%s,%s,%s,%s,%d,%d,%d,%d"%(d,ALLRESULTS[d]["Created"],ALLRESULTS[d]["CountryCode"],ALLRESULTS[d]["SOA"],ALLRESULTS[d]["VirusTotal"],ALLRESULTS[d]["quad9"],ALLRESULTS[d]["shannon"],ALLRESULTS[d]["levenshtein"]))
 
