@@ -1,19 +1,22 @@
 #!/bin/bash
 # script to run hnrd across newer log files
-# STDIN line separated search strings
-# p1=output directory
+# p1=file containing line separated search strings
+# p2=output directory
 # p2=input directory
 set -ex
-[[ -n $1 ]] || { echo "Output directory not specified" >&2 ; exit 1 ; }
-[[ -n $2 ]] || { echo "Input directory not specified" >&2 ; exit 1 ; }
+[[ -n $1 ]] || { echo "Search string file not specified" >&2 ; exit 1 ; }
+[[ -n $2 ]] || { echo "Output directory not specified" >&2 ; exit 1 ; }
+[[ -n $3 ]] || { echo "Input directory not specified" >&2 ; exit 1 ; }
 
-outdir="$1"
-indir="$2"
+searchfile="$1"
+outdir="$2"
+indir="$3"
 readme=$outdir/README.md
 mydir=$(dirname $(readlink -f $0))
 
 echo "# CSV files with DNS data" > $readme
-while read; do
+{
+  while read; do
     searchhash=$(base64 -w 0 <<<"$REPLY")
 
     results=$outdir/$searchhash
@@ -30,4 +33,5 @@ while read; do
         echo "$f" >>$results.processed
     done >>$results
     echo "- [`$REPLY`]($searchhash)" >> $readme
-done
+  done
+} < $searchfile
