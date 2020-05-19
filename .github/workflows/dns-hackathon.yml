@@ -35,7 +35,7 @@ jobs:
       - name: Plot new DNS data
         uses: ./
         with:
-            args: "/app/plotgraph.sh covid graphs results"
+            args: "/app/plotgraph.sh searches.txt graphs results"
     
       - name: Commit files
         run: /bin/sh commit_and_push.sh "Plot new DNS data" graphs
