@@ -50,7 +50,7 @@ def import_csv(csv_path):
     data = []
     with open(csv_path) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
-        headers = csv_reader.next() # skip the headers
+        headers = next(csv_reader, None) # skip the headers
         for domain, registereddate, country, DNShost, vt, q9, shannon, levenshtein in csv_reader:
             data.append(Graph_node(domain, registereddate, country, DNShost, vt, q9, shannon, levenshtein))
     return data
