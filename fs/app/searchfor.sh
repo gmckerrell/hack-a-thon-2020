@@ -13,8 +13,8 @@ readme=$outdir/README.md
 mydir=$(dirname $(readlink -f $0))
 
 echo "# CSV files with DNS data" > $readme
-while read search; do
-    searchhash=$(base64 -w 0 <<<"$search")
+while read; do
+    searchhash=$(base64 -w 0 <<<"$REPLY")
 
     results=$outdir/$searchhash
     if [[ -e $results.processed ]] ; then
@@ -26,8 +26,8 @@ while read search; do
     # find the new domain files which we have not seen before
     find $indir -type f | $findargs | sort | while read f ; do
         # for each newer file, crawl the results
-        python ${mydir}/hnrd.py -n -f "$f" -s "$search"
+        python ${mydir}/hnrd.py -n -f "$f" -s "$REPLY"
         echo "$f" >>$results.processed
     done >>$results
-    echo "- [`$search`]($searchhash)" >> $readme
+    echo "- [`$REPLY`]($searchhash)" >> $readme
 done
