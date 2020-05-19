@@ -27,7 +27,7 @@ jobs:
       - name: Analyse new DNS data
         uses: ./
         with:
-            args: "/app/searchfor.sh results historic < searches.txt"
+            args: "/app/searchfor.sh searches.txt results historic"
     
       - name: Commit files
         run: /bin/sh commit_and_push.sh "Analyzed DNS data" results
