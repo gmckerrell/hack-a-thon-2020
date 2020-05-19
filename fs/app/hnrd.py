@@ -21,6 +21,11 @@ import tldextract
 import base64
 import datetime
 
+try:
+  # python 2: 'unicode' is built-in
+  unicode
+except  NameError:
+  unicode=str
 
 try:
     from sets import Set as set
@@ -474,9 +479,7 @@ if __name__ == '__main__':
     d2={}
     RE_list=[re.compile(search) for search in search_all]
     for r in f:
-        #row = str(r,"utf-8").strip("\r\n") # convert bytes into string
-        row = str(r).encode("utf-8").strip("\r\n") # convert bytes into string
-        #print(row, file=sys.stderr)
+        row = unicode(r, "utf-8").strip("\r\n") # convert bytes into string
         for RE in RE_list:
             match = RE.match(row)
             if match:
