@@ -13,8 +13,6 @@ Editing this file will cause more terms to be used in the analysis.
 [`dns-hackathon.yml`](https://github.com/gmckerrell/hack-a-thon-2020/blob/master/.github/workflows/dns-hackathon.yml)
 defines the processing pipeline.
 
-#### Results
-
 [Show action](https://github.com/gmckerrell/hack-a-thon-2020/actions?query=workflow%3A%22Download%2C+Process+and+Plot+DNS+data%22)
 
 This repository hosts some github actions which run in a Python-3 docker container.
