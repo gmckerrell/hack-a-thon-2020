@@ -1,6 +1,6 @@
 # Analysed DNS data
 ## Columns
-`domain, created, country, soa, vt, quad9, shannon, lev`
+`domain, registeredDate, country, DNShost, virusTotal, quad9, shannon, levenshtein`
 ## CSV Files
 - [`covid`](Y292aWQK.csv)
 - [`mcafee`](bWNhZmVlCg==.csv)
