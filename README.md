@@ -1,12 +1,13 @@
 # hack-a-thon-2020
 ## "GitHub Actions" and "Current Event DNS Registrations" 
-![Download, Process and Plot DNS data](https://github.com/gmckerrell/hack-a-thon-2020/workflows/Download,%20Process%20and%20Plot%20DNS%20data/badge.svg)
 
 ### Defining search terms
 The repository contains a [`searches.txt`](searches.txt) file which is a line delimited file of search terms.
 Editing this file will cause more terms to be used in the analysis.
 
 ### Processing pipeline
+![Download, Process and Plot DNS data](https://github.com/gmckerrell/hack-a-thon-2020/workflows/Download,%20Process%20and%20Plot%20DNS%20data/badge.svg)
+
 [`dns-hackathon.yml`](https://github.com/gmckerrell/hack-a-thon-2020/blob/master/.github/workflows/dns-hackathon.yml)
 defines the processing pipeline.
 
