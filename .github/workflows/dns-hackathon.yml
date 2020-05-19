@@ -21,7 +21,7 @@ jobs:
         with:
             args: python /app/get_dns.py -d historic
 
-      - name: Commit files
+      - name: Commit historic data
         run: /bin/sh commit_and_push.sh "Commit DNS historic data" historic
         
       - name: Analyse new DNS data
@@ -29,13 +29,13 @@ jobs:
         with:
             args: "/app/searchfor.sh searches.txt results historic"
     
-      - name: Commit files
+      - name: Commit results data
         run: /bin/sh commit_and_push.sh "Analyzed DNS data" results
 
-      - name: Plot new DNS data
+      - name: Plot DNS data
         uses: ./
         with:
             args: "/app/plotgraph.sh searches.txt graphs results"
     
-      - name: Commit files
+      - name: Commit graph files
         run: /bin/sh commit_and_push.sh "Plot new DNS data" graphs
