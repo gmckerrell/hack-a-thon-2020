@@ -3,6 +3,8 @@
 
 ### Defining search terms
 The repository contains a [`searches.txt`](searches.txt) file which is a line delimited file of search terms.
+A github action is uses this to aquire, process and plot [DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/)
+
 Editing this file will cause more terms to be used in the analysis.
 
 ### Processing pipeline
@@ -10,6 +12,8 @@ Editing this file will cause more terms to be used in the analysis.
 
 [`dns-hackathon.yml`](https://github.com/gmckerrell/hack-a-thon-2020/blob/master/.github/workflows/dns-hackathon.yml)
 defines the processing pipeline.
+
+#### Results
 
 [Show action](https://github.com/gmckerrell/hack-a-thon-2020/actions?query=workflow%3A%22Download%2C+Process+and+Plot+DNS+data%22)
 
@@ -25,5 +29,4 @@ This repository hosts some github actions which run in a Python-3 docker contain
   - Github pages provides the hosting.
 
 ### Results
-- [Graphs of DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/)
 - [Raw CSV data for DNS registrations](https://gmckerrell.github.io/hack-a-thon-2020/results/)
