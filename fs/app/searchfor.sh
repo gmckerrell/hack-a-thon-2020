@@ -14,7 +14,12 @@ indir="$3"
 readme=$outdir/README.md
 mydir=$(dirname $(readlink -f $0))
 
-echo "# CSV files with DNS data" > $readme
+{
+    echo "# Analysed DNS data" 
+    echo "## Columns"
+    echo "`domain, created, country, soa, vt, quad9, shannon, lev`"
+    echo "## CSV Files"
+} > $readme
 {
   while read; do
     searchhash=$(base64 -w 0 <<<"$REPLY")
@@ -32,6 +37,6 @@ echo "# CSV files with DNS data" > $readme
         python ${mydir}/hnrd.py -n -f "$f" -s "$REPLY"
         echo "$f" >>$results.processed
     done >>$results
-    echo "- [`$REPLY`]($searchhash)" >> $readme
+    echo "- [\`$REPLY\`]($searchhash)" >> $readme
   done
 } < $searchfile
