@@ -50,9 +50,12 @@ def import_csv(csv_path):
     data = []
     with open(csv_path) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
-        headers = next(csv_reader, None) # skip the headers
-        for domain, registereddate, country, DNShost, vt, q9, shannon, levenshtein in csv_reader:
-            data.append(Graph_node(domain, registereddate, country, DNShost, vt, q9, shannon, levenshtein))
+        headers = None
+        for row in csv_reader:
+            if not headers:
+                headers = row
+            else:
+                data.append(Graph_node(*row))
     return data
 
 class Graph_node:
