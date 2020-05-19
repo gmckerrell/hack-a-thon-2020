@@ -1,6 +1,12 @@
 # hack-a-thon-2020
+## "GitHub Actions" and "Current Event DNS Registrations" 
 ![Download, Process and Plot DNS data](https://github.com/gmckerrell/hack-a-thon-2020/workflows/Download,%20Process%20and%20Plot%20DNS%20data/badge.svg)
 
+### Defining search terms
+The repository contains a [`searches.txt`](searches.txt) file which is a line delimited file of search terms.
+Editing this file will cause more terms to be used in the analysis.
+
+### Processing pipeline
 [`dns-hackathon.yml`](https://github.com/gmckerrell/hack-a-thon-2020/blob/master/.github/workflows/dns-hackathon.yml)
 defines the processing pipeline.
 
@@ -17,10 +23,6 @@ This repository hosts some github actions which run in a Python-3 docker contain
 - details are cached in the github repostitory to maintain a historic record.
   - Github pages provides the hosting.
 
-## Defining search terms
-The repository contains a [`searches.txt`](searches.txt) file which is a line delimited file of search terms.
-Editing this file will cause more terms to be used in the analysis.
-
-## Results
+### Results
 - [Graphs of DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/)
 - [Raw CSV data for DNS registrations](https://gmckerrell.github.io/hack-a-thon-2020/results/)
