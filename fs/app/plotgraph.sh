@@ -26,6 +26,6 @@ while read; do
 
     mkdir -p $outdir/$searchhash
     python3 $mydir/generate_graph.py $results $outdir/$searchhash "$REPLY"
-    echo "- [\`$REPLY\`]($searchhash/index.html)"
+    echo "- [\`$REPLY\`]($searchhash/index.html)" >> $readme
 done
 } < $searchesfile
