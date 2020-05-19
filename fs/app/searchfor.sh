@@ -37,6 +37,6 @@ mydir=$(dirname $(readlink -f $0))
         python ${mydir}/hnrd.py -n -f "$f" -s "$REPLY"
         echo "$f" >>$results.processed
     done >>$results
-    echo "- [\`$REPLY\`]($searchhash)" >> $readme
+    echo "- [\`$REPLY\`](${searchhash}.csv)" >> $readme
   done
 } < $searchfile
