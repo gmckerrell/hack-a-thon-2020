@@ -3,7 +3,7 @@
 
 ### Defining search terms
 The repository contains a [`searches.txt`](searches.txt) file which is a line delimited file of search terms.
-A github action is uses this to aquire, process and plot [DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/)
+A github action uses this to aquire, process and plot [DNS registrations over time](https://gmckerrell.github.io/hack-a-thon-2020/graphs/)
 
 Editing this file will cause more terms to be used in the analysis.
 
