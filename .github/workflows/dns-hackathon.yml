@@ -1,9 +1,9 @@
 name: Download, Process and Plot DNS data
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    # trigger every day @midnight
-    - cron:  '0 6 * * *'
+#  schedule:
+#    # * is a special character in YAML so you have to quote this string
+#    # trigger every day @midnight
+#    - cron:  '0 6 * * *'
   push:
     branches: [ master, gjm ]
     
